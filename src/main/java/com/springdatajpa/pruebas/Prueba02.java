@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class Prueba02 implements CommandLineRunner {
 
@@ -28,12 +31,29 @@ public class Prueba02 implements CommandLineRunner {
         libro.setTitulo("Hola");
 
         Libro libro2 = new Libro();
-        libro.setTitulo("Chao");
+        libro2.setTitulo("Chao");
 
         autor.getLibros().add(libro);
         autor.getLibros().add(libro2);
 
         //Se guarda el autor y automaticamente los libros correspondientes ya que se utiliza CascadeType.All
         autorRepository.save(autor);
+
+        Optional<Autor> autorGuardado = autorRepository.findById(autor.getId());
+        autorGuardado.ifPresent(a -> {
+            System.out.println("Autor encontrado por ID: " + a.getNombre());
+
+            /*a.setNombre("Nuevo nombre del autor");
+            autorRepository.save(a);
+            System.out.println("Autor actualizado: " + a.getNombre());*/
+        });
+
+        List<Autor> autores = autorRepository.findAll();
+        System.out.println("Lista de autores: " );
+        for (Autor a : autores){
+            System.out.println("-" + a.getNombre());
+        }
+
+        /*autorRepository.delete(autor);*/
     }
 }
